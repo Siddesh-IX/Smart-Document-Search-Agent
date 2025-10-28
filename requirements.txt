@@ -16,6 +16,7 @@ faiss-cpu>=1.7.4
 # Document Processing
 pypdf>=3.17.0
 unstructured>=0.11.0
+python-docx>=1.1.0
 
 # OpenAI Integration
 tiktoken>=0.5.2
