@@ -6,8 +6,7 @@ Handles all OpenAI API calls and document processing
 import os
 import tempfile
 import shutil
-from io import BytesIO
-from typing import List, Dict, Any
+from typing import Dict, Any
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_community.vectorstores import FAISS
@@ -185,6 +184,29 @@ class DocumentSearchBackend:
                 'message': f'Index ready with {self.index.index.ntotal} document chunks.'
             }
     
+    def clear_documents(self) -> Dict[str, Any]:
+        """Clear all document chunks and reset the index"""
+        try:
+            import shutil
+            
+            # Clear the index from memory
+            self.index = None
+            
+            # Remove the FAISS index directory if it exists
+            if os.path.exists(self.faiss_path):
+                shutil.rmtree(self.faiss_path)
+                
+            return {
+                'success': True,
+                'message': 'All document chunks have been cleared successfully.'
+            }
+            
+        except Exception as e:
+            return {
+                'success': False,
+                'error': f'Error clearing documents: {str(e)}'
+            }
+    
     def format_docs(self, docs):
         """Format retrieved documents for the prompt"""
         formatted = []
@@ -355,3 +377,8 @@ def get_backend_service():
         backend_service = DocumentSearchBackend()
         backend_service.load_index()
     return backend_service
+
+def reset_backend_service():
+    """Reset the global backend service instance"""
+    global backend_service
+    backend_service = None

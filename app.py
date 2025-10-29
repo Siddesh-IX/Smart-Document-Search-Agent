@@ -24,9 +24,8 @@ if 'uploaded_files_info' not in st.session_state:
 if 'show_upload_interface' not in st.session_state:
     st.session_state.show_upload_interface = False
 
-@st.cache_resource
 def get_backend():
-    """Get the backend service instance (cached)"""
+    """Get the backend service instance"""
     backend = get_backend_service()
     if backend.index is None:
         backend.load_index()
@@ -64,8 +63,7 @@ def add_to_chat_history(question, answer, sources):
 def display_chat_history():
     """Display the chat history in a conversational format."""
     if st.session_state.chat_history:
-        st.subheader("💬 Conversation History")
-        
+        # Display chat messages without redundant title since we have title section at top
         for i, chat in enumerate(st.session_state.chat_history):
             # User question (right side with grey background)
             # Responsive columns: mobile-friendly layout
@@ -150,74 +148,7 @@ st.set_page_config(
     page_icon="📄"
 )
 
-# Add custom CSS for better chat appearance
-st.markdown("""
-<style>
-/* Chat container styling */
-.chat-container {
-    max-height: 600px;
-    overflow-y: auto;
-    padding: 10px 0;
-}
-
-/* Hide Streamlit default elements */
-.stApp > header {
-    background-color: transparent;
-}
-
-/* Custom scrollbar */
-.chat-container::-webkit-scrollbar {
-    width: 8px;
-}
-
-.chat-container::-webkit-scrollbar-track {
-    background: #1E1E1E;
-    border-radius: 4px;
-}
-
-.chat-container::-webkit-scrollbar-thumb {
-    background: #404040;
-    border-radius: 4px;
-}
-
-.chat-container::-webkit-scrollbar-thumb:hover {
-    background: #555555;
-}
-
-/* Improve button styling */
-.stButton > button {
-    background-color: #007ACC !important;
-    color: white !important;
-    border: none !important;
-    border-radius: 8px !important;
-    font-size: 14px !important;
-    font-weight: 500 !important;
-    padding: 8px 16px !important;
-    min-height: 40px !important;
-}
-
-.stButton > button:hover {
-    background-color: #005A9E !important;
-    transform: scale(1.02) !important;
-    transition: all 0.2s !important;
-}
-
-.stButton > button:focus {
-    outline: none !important;
-    box-shadow: 0 0 0 2px rgba(0, 122, 204, 0.3) !important;
-}
-
-/* Sidebar improvements */
-.css-1d391kg {
-    background-color: #1E1E1E;
-}
-</style>
-""", unsafe_allow_html=True)
-
-st.title("📄 Smart Document Search Agent")
-
-# Add main content wrapper to prevent overlap with sticky input
-st.markdown('<div class="main-content">', unsafe_allow_html=True)
+# Clean up old CSS and prepare for 3-section layout
 
 # Load the backend service
 backend = get_backend()
@@ -247,16 +178,16 @@ if not show_chat_interface:
     # File Upload Section
     col1, col2, col3 = st.columns([1, 3, 1])
     with col2:
-        st.markdown("""
-        <div style="
-            background-color: #262730;
-            padding: 30px;
-            border-radius: 15px;
-            border: 2px dashed #007ACC;
-            margin: 20px 0;
-            text-align: center;
-        ">
-        """, unsafe_allow_html=True)
+        # st.markdown("""
+        # <div style="
+        #     background-color: #262730;
+        #     padding: 30px;
+        #     border-radius: 15px;
+        #     border: 2px dashed #007ACC;
+        #     margin: 20px 0;
+        #     text-align: center;
+        # ">
+        # """, unsafe_allow_html=True)
         
         st.markdown("### 📁 Upload Your Documents")
         st.markdown("**Supported formats:** PDF, Word (.doc, .docx)")
@@ -308,49 +239,42 @@ if not show_chat_interface:
         
         st.markdown("</div>", unsafe_allow_html=True)
         
-        # Instructions
-        st.markdown("""
-        <div style="
-            background-color: #1E1E1E;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 20px 0;
-        ">
-            <h4 style="color: #007ACC;">💡 How it works:</h4>
-            <ol style="color: #B0B0B0; line-height: 1.6;">
-                <li>Upload 1-10 PDF or Word documents</li>
-                <li>Click "Process Documents" to create search index</li>
-                <li>Start asking questions about your documents</li>
-                <li>Get AI-powered answers with source references</li>
-            </ol>
+        # Instructions using native Streamlit components
+        with st.container():
+            st.markdown("#### 💡 How it works:")
+            st.markdown("""
+            1. Upload 1-10 PDF or Word documents
+            2. Click "Process Documents" to create search index
+            3. Start asking questions about your documents
+            4. Get AI-powered answers with source references
+            """)
             
-            <h4 style="color: #007ACC; margin-top: 20px;">🔒 Privacy:</h4>
-            <p style="color: #B0B0B0; margin: 0;">Your documents are processed locally and securely. Files are temporarily stored only during processing.</p>
+            st.markdown("#### 🔒 Privacy:")
+            st.info("Your documents are processed locally and securely. Files are temporarily stored only during processing.")
             
-            <h4 style="color: #007ACC; margin-top: 20px;">🎯 AI Behavior:</h4>
-            <p style="color: #B0B0B0; margin: 0;">The AI will only answer based on your uploaded documents. If information isn't found, it will clearly state this instead of guessing.</p>
-        </div>
-        """, unsafe_allow_html=True)
+            st.markdown("#### 🎯 AI Behavior:")
+            st.info("The AI will only answer based on your uploaded documents. If information isn't found, it will clearly state this instead of guessing.")
 
 else:
-    # Chat Interface (existing code with modifications)
+    # Chat Interface with proper 3-section layout
+    st.markdown('<div class="main-app-container">', unsafe_allow_html=True)
+    
+    # SECTION 1: Title/Header (Fixed at top)
+    st.markdown('<div class="title-section">', unsafe_allow_html=True)
+    st.markdown("### 📄 Smart Document Search Agent")
+    
     # Show processing status if files were just processed
     if st.session_state.processing_status and st.session_state.uploaded_files_info:
         st.success(f"✅ Successfully processed {len(st.session_state.uploaded_files_info)} documents!")
-        
-        with st.expander("📊 Processing Details", expanded=False):
-            st.write(f"**Files processed:** {', '.join(st.session_state.uploaded_files_info)}")
-            st.write(f"**Total chunks created:** {st.session_state.processing_status.get('total_chunks', 'N/A')}")
-            
-            if st.button("🔄 Upload New Documents", use_container_width=True):
-                # Reset session state to go back to upload interface
-                st.session_state.files_processed = False
-                st.session_state.processing_status = None
-                st.session_state.uploaded_files_info = None
-                st.session_state.chat_history = []
-                st.session_state.show_upload_interface = True
-                st.session_state.input_key += 1  # Reset input field as well
-                st.rerun()
+    st.markdown('</div>', unsafe_allow_html=True)
+    
+    # SECTION 2: Chat/Conversation (Scrollable middle section)
+    st.markdown('<div class="chat-section">', unsafe_allow_html=True)
+    
+    # Display chat history within scrollable area
+    display_chat_history()
+    
+    st.markdown('</div>', unsafe_allow_html=True)  # Close chat-section
     
     # Sidebar with instructions and examples
     with st.sidebar:
@@ -366,8 +290,6 @@ else:
             
             st.header("💡 Example Questions")
             st.markdown("""
-            - "What is the main topic of these documents?"
-            - "Summarize the key points"
             - "What are the important policies mentioned?"
             - "Find information about specific procedures"
             - "What are the main conclusions?"
@@ -383,13 +305,13 @@ else:
             # Action buttons
             col1, col2 = st.columns(2)
             with col1:
-                if st.button("🗑️ Clear Chat", use_container_width=True):
+                if st.button("Clear Chat", use_container_width=True):
                     st.session_state.chat_history = []
                     st.session_state.input_key += 1
                     st.rerun()
             
             with col2:
-                if st.button("📁 New Upload", use_container_width=True):
+                if st.button("New Upload", use_container_width=True):
                     # Clear all session state for fresh upload
                     st.session_state.files_processed = False
                     st.session_state.processing_status = None
@@ -398,40 +320,138 @@ else:
                     st.session_state.show_upload_interface = True
                     st.session_state.input_key += 1  # Reset input field as well
                     st.rerun()
+            
+            # Clear Documents button (full width)
+            if status['loaded']:  # Only show if documents are loaded
+                st.markdown("---")  # Separator line
+                st.markdown("⚠️ **Danger Zone**")
+                
+                # Initialize confirmation state
+                if 'confirm_clear_docs' not in st.session_state:
+                    st.session_state.confirm_clear_docs = False
+                
+                if not st.session_state.confirm_clear_docs:
+                    if st.button("Clear All Document Chunks", use_container_width=True, type="secondary"):
+                        st.session_state.confirm_clear_docs = True
+                        st.rerun()
+                else:
+                    st.warning("⚠️ This will permanently delete all document chunks!")
+                    col_confirm1, col_confirm2 = st.columns(2)
+                    
+                    with col_confirm1:
+                        if st.button("✅ Yes, Clear", use_container_width=True, type="primary"):
+                            # Clear documents from backend
+                            result = backend.clear_documents()
+                            
+                            if result['success']:
+                                # Reset backend service to reload fresh state
+                                from backend import reset_backend_service
+                                reset_backend_service()
+                                
+                                # Clear all session state
+                                st.session_state.files_processed = False
+                                st.session_state.processing_status = None
+                                st.session_state.uploaded_files_info = None
+                                st.session_state.chat_history = []
+                                st.session_state.show_upload_interface = True
+                                st.session_state.input_key += 1
+                                st.session_state.confirm_clear_docs = False
+                                
+                                st.success("✅ All documents cleared successfully!")
+                                st.rerun()
+                            else:
+                                st.error(f"❌ Error clearing documents: {result.get('error', 'Unknown error')}")
+                                st.session_state.confirm_clear_docs = False
+                    
+                    with col_confirm2:
+                        if st.button("❌ Cancel", use_container_width=True):
+                            st.session_state.confirm_clear_docs = False
+                            st.rerun()
     
-    # Display chat history
-    display_chat_history()
-    
-    # Fixed input at the bottom with modern styling
-    st.markdown("---")
-    
-    # Sticky search bar at the bottom with responsive design
+    # 3-Section Layout CSS
     st.markdown("""
     <style>
-    /* Sticky input container */
-    .input-container {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background-color: #0E1117;
-        padding: 15px 20px 20px 20px;
-        border-top: 1px solid #262730;
-        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
-        z-index: 1000;
+    /* Main parent container - exactly 100vh */
+    .main-app-container {
+        height: 100vh !important;
+        display: flex !important;
+        flex-direction: column !important;
+        overflow: hidden !important;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
     }
     
-    /* Remove outer border and keep only inner */
-    .stTextInput > div {
+    /* Section 1: Title/Header - Fixed height at top */
+    .title-section {
+        height: 80px !important;
+        flex-shrink: 0 !important;
+        padding: 15px 20px !important;
+        background-color: #0E1117 !important;
+        border-bottom: 1px solid #262730 !important;
+        display: flex !important;
+        align-items: center !important;
+        z-index: 100 !important;
+        position: relative !important;
+    }
+    
+    /* Section 2: Chat/Conversation - Flexible with scroll */
+    .chat-section {
+        flex: 1 !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        padding: 20px !important;
+        background-color: #0E1117 !important;
+        min-height: 0 !important; /* Critical for flex children */
+    }
+    
+    /* Section 3: Input - Fixed height at bottom */
+    .input-section {
+        height: 100px !important;
+        flex-shrink: 0 !important;
+        padding: 15px 20px !important;
+        background-color: #0E1117 !important;
+        border-top: 1px solid #262730 !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 10px !important;
+        z-index: 100 !important;
+        position: relative !important;
+    }
+    
+    /* Custom scrollbar for chat section */
+    .chat-section::-webkit-scrollbar {
+        width: 8px;
+    }
+    
+    .chat-section::-webkit-scrollbar-track {
+        background: #1E1E1E;
+        border-radius: 4px;
+    }
+    
+    .chat-section::-webkit-scrollbar-thumb {
+        background: #404040;
+        border-radius: 4px;
+    }
+    
+    .chat-section::-webkit-scrollbar-thumb:hover {
+        background: #555555;
+    }
+    
+    /* Input styling */
+    .input-section .stTextInput > div {
         border: none !important;
         padding: 0 !important;
+        width: 100% !important;
     }
     
-    .stTextInput > div > div {
+    .input-section .stTextInput > div > div {
         border: none !important;
     }
     
-    .stTextInput > div > div > input {
+    .input-section .stTextInput > div > div > input {
         background-color: #262730 !important;
         border: 1px solid #404040 !important;
         border-radius: 25px !important;
@@ -439,117 +459,127 @@ else:
         color: #FAFAFA !important;
         outline: none !important;
         box-shadow: none !important;
-        font-size: 16px !important; /* Prevents zoom on mobile */
+        font-size: 16px !important;
+        width: 100% !important;
     }
     
-    .stTextInput > div > div > input:focus {
+    .input-section .stTextInput > div > div > input:focus {
         border: 1px solid #007ACC !important;
         box-shadow: 0 0 0 1px #007ACC !important;
         outline: none !important;
     }
     
-    .stTextInput > div > div > input:focus-visible {
-        outline: none !important;
-        border: 1px solid #007ACC !important;
-        box-shadow: 0 0 0 1px #007ACC !important;
+    /* Button styling */
+    .input-section .stButton > button {
+        background-color: #007ACC !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 25px !important;
+        padding: 12px 30px !important;
+        font-size: 16px !important;
+        font-weight: 600 !important;
+        height: 50px !important;
+        min-width: 80px !important;
     }
     
-    /* Remove red borders completely */
-    .stTextInput > div > div > input:invalid,
-    .stTextInput > div > div > input:required {
-        border: 1px solid #404040 !important;
-        box-shadow: none !important;
+    .input-section .stButton > button:hover {
+        background-color: #005A9E !important;
+        transform: translateY(-1px) !important;
     }
     
-    /* Add bottom margin to main content to prevent overlap with sticky input */
-    .main-content {
-        margin-bottom: 100px;
+    /* Hide Streamlit's default app structure */
+    .stApp > div:first-child {
+        overflow: hidden !important;
     }
     
-    /* Responsive design */
+    /* Mobile responsive */
     @media (max-width: 768px) {
-        .input-container {
-            padding: 10px 15px 15px 15px;
-        }
-        
-        .stTextInput > div > div > input {
+        .title-section {
+            height: 70px !important;
             padding: 10px 15px !important;
-            font-size: 16px !important;
         }
         
-        /* Adjust column widths on mobile */
-        .stColumns {
-            gap: 5px;
+        .input-section {
+            height: 90px !important;
+            padding: 10px 15px !important;
         }
         
-        /* Chat bubbles responsive */
-        .main-content {
-            margin-bottom: 120px;
-            padding: 0 10px;
-        }
-        
-        /* Make chat bubbles full width on mobile */
-        [data-testid="column"] {
-            min-width: 0;
+        .chat-section {
+            padding: 15px !important;
         }
     }
     
     @media (max-width: 480px) {
-        .input-container {
-            padding: 8px 10px 12px 10px;
+        .title-section {
+            height: 60px !important;
+            padding: 8px 10px !important;
         }
         
-        .stTextInput > div > div > input {
+        .input-section {
+            height: 80px !important;
+            padding: 8px 10px !important;
+        }
+        
+        .chat-section {
+            padding: 10px !important;
+        }
+        
+        .input-section .stTextInput > div > div > input {
             padding: 8px 12px !important;
-            font-size: 16px !important;
+            font-size: 14px !important;
         }
         
-        .main-content {
-            margin-bottom: 110px;
-            padding: 0 5px;
-        }
-        
-        /* Stack columns on very small screens */
-        .stColumns {
-            flex-direction: column;
-            gap: 2px;
-        }
-        
-        /* Hide sidebar on mobile for more space */
-        .css-1d391kg {
-            display: none;
+        .input-section .stButton > button {
+            padding: 8px 20px !important;
+            font-size: 14px !important;
+            height: 40px !important;
         }
     }
     
-    /* Ensure text is readable on all devices */
-    @media (min-width: 1200px) {
-        .main-content {
-            max-width: 1200px;
-            margin: 0 auto 100px auto;
-        }
+    /* Process Documents Button - Purple Theme */
+    .stButton > button[kind="primary"] {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 25px !important;
+        font-weight: 600 !important;
+        transition: all 0.3s ease !important;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3) !important;
+    }
+    
+    .stButton > button[kind="primary"]:hover {
+        background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%) !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4) !important;
+    }
+    
+    .stButton > button[kind="primary"]:active {
+        transform: translateY(0px) !important;
+        box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3) !important;
     }
     </style>
     """, unsafe_allow_html=True)
     
-    # Wrap input in container with sticky class
-    st.markdown('<div class="input-container">', unsafe_allow_html=True)
+    # SECTION 3: Input (Fixed at bottom)
+    st.markdown('<div class="input-section">', unsafe_allow_html=True)
     
-    with st.container():
-        # Create responsive columns
-        col1, col2 = st.columns([4, 1])
-        
-        with col1:
-            query = st.text_input(
-                "Ask a question about your documents:",
-                placeholder="💬 Type your question here...",
-                key=f"query_input_{st.session_state.input_key}",
-                label_visibility="collapsed"
-            )
-        
-        with col2:
-            send_button = st.button("Ask", use_container_width=True, help="Ask question")
+    # Create responsive columns for input
+    col1, col2 = st.columns([4, 1])
     
-    st.markdown('</div>', unsafe_allow_html=True)
+    with col1:
+        query = st.text_input(
+            "Ask a question about your documents:",
+            placeholder="💬 Type your question here...",
+            key=f"query_input_{st.session_state.input_key}",
+            label_visibility="collapsed"
+        )
+    
+    with col2:
+        send_button = st.button("Ask", use_container_width=True, help="Ask question")
+    
+    st.markdown('</div>', unsafe_allow_html=True)  # Close input-section
+    
+    st.markdown('</div>', unsafe_allow_html=True)  # Close main-app-container
     
     # Process the question when user submits
     if (query and send_button) or (query and query not in [chat['question'] for chat in st.session_state.chat_history]):
@@ -574,6 +604,3 @@ else:
                 else:
                     st.error(f"An error occurred: {result['error']}")
                     st.info("Please check your OpenAI API key and try again.")
-
-# Close main content wrapper
-st.markdown('</div>', unsafe_allow_html=True)
