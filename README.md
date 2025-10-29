@@ -2,215 +2,302 @@
 
 A powerful Retrieval-Augmented Generation (RAG) application built with Python, Streamlit, and LangChain that allows you to upload documents and ask intelligent questions about their content. The AI will search through your documents and provide answers with proper source citations.
 
-## 🎯 Features
+## ✨ Key Features
 
-- **Smart Document Search**: Uses semantic similarity search to find relevant content
-- **Multiple File Formats**: Supports PDF and TXT files
-- **Source Citation**: Always shows which documents contain the answers
-- **Interactive Web Interface**: Clean, user-friendly Streamlit interface
-- **Vector Store**: Efficient FAISS-based vector storage for fast retrieval
-- **OpenAI Integration**: Powered by GPT models and OpenAI embeddings
-- **Local Storage**: Documents and indices stored locally for privacy
+### 🚀 **Dynamic Document Processing**
+- **Runtime Upload**: Upload 1-10 documents directly through the web interface
+- **Multi-Format Support**: PDF and Word (.doc, .docx) documents
+- **Real-Time Processing**: Automatic FAISS index creation after upload
+- **File Validation**: Size limits, type checking, and comprehensive error handling
 
-## � Project Requirements
+### 🎯 **Intelligent Search & AI**
+- **Semantic Search**: Vector embeddings for intelligent content matching using OpenAI embeddings
+- **Anti-Hallucination**: Built-in validation to prevent AI assumptions and general knowledge responses
+- **Source Citation**: Always shows which documents contain the answers with proper references
+- **Context-Aware**: Chunk-based processing with overlap for content continuity
 
-**Objective**: Upload a small set of documents (5–10). The AI should allow the user to search a query and return the most relevant snippet with source reference.
+### 🎨 **Modern User Interface**
+- **3-Section Layout**: Fixed title header, scrollable chat area, and always-visible input section
+- **Responsive Design**: Mobile-friendly interface with proper viewport handling
+- **Purple Theme**: Modern gradient design with smooth hover animations
+- **Session Management**: Persistent chat history and document status tracking
 
-### **Acceptance Criteria**
+### 🔒 **Privacy & Security**
+- **Local Processing**: Documents processed and stored locally for privacy
+- **Secure API**: Only relevant text chunks sent to OpenAI, never full documents
+- **Session Isolation**: Each user session maintains separate document context
 
-- ✅ Upload at least 5 text/PDF docs
-- ✅ User types a query → AI returns the best matching snippet
-- ✅ Must show source file name with the answer
-- ✅ Should work with at least 3 different queries
+## 🎯 Project Evolution & Requirements
 
-### **Required Technologies**
+### **Original Requirements Met & Enhanced**
 
-- ✅ LangChain + GPT-4
-- ✅ Document embeddings (OpenAI)
-- ✅ Streamlit UI
+**Enhanced Objective**: Dynamic upload of 1-10 documents with intelligent question-answering and proper source attribution.
 
-## �🛠️ Tech Stack
+### **Acceptance Criteria - All Enhanced ✅**
 
+- ✅ **Dynamic Upload**: 1-10 PDF/Word docs via web interface (enhanced from static folder)
+- ✅ **Intelligent Search**: AI returns contextually relevant answers with source snippets
+- ✅ **Source Attribution**: Shows document names and relevant text chunks used
+- ✅ **Multi-Query Support**: Handles unlimited queries with chat history
+- ✅ **Anti-Hallucination**: Prevents AI from providing general knowledge responses
+
+### **Technology Stack - Enhanced**
+
+- ✅ **LangChain Framework**: Complete RAG pipeline with document processing
+- ✅ **OpenAI Integration**: GPT-3.5-turbo + text-embedding-ada-002
+- ✅ **Modern Streamlit UI**: 3-section responsive layout with custom CSS
+- ✅ **FAISS Vector Store**: Efficient similarity search with persistent storage
+
+## 🛠️ Technology Stack
+
+### **Core Technologies**
 - **Language**: Python 3.13+
-- **Frontend**: Streamlit
-- **Orchestration**: LangChain
-- **LLM & Embeddings**: OpenAI (GPT-3.5-turbo and text-embedding-ada-002)
-- **Vector Store**: FAISS (in-memory, saved to disk)
-- **Document Loading**: PyPDFLoader, TextLoader
+- **Frontend**: Streamlit with custom CSS (3-section responsive layout)
+- **AI Framework**: LangChain for RAG pipeline orchestration
+- **LLM**: OpenAI GPT-3.5-turbo for answer generation
+- **Embeddings**: OpenAI text-embedding-ada-002 for semantic search
+- **Vector Store**: FAISS with local persistence for fast similarity search
+
+### **Document Processing**
+- **PDF Support**: PyPDF for PDF document processing
+- **Word Support**: python-docx for .doc/.docx files  
+- **Text Processing**: RecursiveCharacterTextSplitter for intelligent chunking
+- **File Handling**: Comprehensive validation and error management
 
 ## 📁 Project Structure
 
 ```
 Smart Document Search Agent/
-├── data/                           # Directory for your documents
-│   ├── *.pdf                      # PDF files
-│   └── *.txt                      # Text files
-├── faiss_index/                   # Generated FAISS vector index (created after ingestion)
-├── app.py                         # Main Streamlit application
-├── ingest.py                      # Document ingestion script
+├── app.py                         # Main Streamlit application with 3-section layout
+├── backend.py                     # Document processing & AI backend service  
+├── ingest.py                      # Legacy document ingestion script (optional)
 ├── requirements.txt               # Python dependencies
-├── .env                          # Environment variables (API keys)
-├── .gitignore                    # Git ignore file
-└── README.md                     # This file
+├── .env                          # Environment variables (OpenAI API key)
+├── faiss_index/                   # Auto-generated FAISS vector index
+│   └── index.faiss               # Vector store file (created after upload)
+├── __pycache__/                  # Python cache files
+├── data/                         # Legacy static documents folder (optional)
+├── .gitignore                    # Git ignore configuration
+└── README.md                     # This documentation
 ```
+
+### **File Descriptions**
+
+- **app.py**: Modern Streamlit UI with dynamic file upload, chat interface, and session management
+- **backend.py**: Core RAG functionality including document processing, FAISS operations, and AI integration
+- **requirements.txt**: All Python dependencies including Streamlit, LangChain, OpenAI, FAISS, and document processors
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
-- Python 3.13 or higher
-- OpenAI API key ([Get one here](https://platform.openai.com/account/api-keys))
+- **Python 3.13+** ([Download here](https://www.python.org/downloads/))
+- **OpenAI API Key** ([Get one here](https://platform.openai.com/account/api-keys))
+- **Git** (optional, for cloning)
 
-### Installation
+### Installation & Setup
 
-1. **Clone or download the project**
+1. **Clone or Download the Project**
 
    ```bash
-   cd "C:\Projects\Smart Document Search Agent"
+   git clone https://github.com/Siddesh-IX/Smart-Document-Search-Agent.git
+   cd "Smart-Document-Search-Agent"
    ```
 
-2. **Install dependencies**
+2. **Install Python Dependencies**
 
    ```bash
    pip install -r requirements.txt
    ```
 
-3. **Set up your OpenAI API key**
+3. **Configure OpenAI API Key**
 
-   Edit the `.env` file and replace the placeholder with your actual API key:
+   Create a `.env` file in the project root:
 
-   ```
+   ```env
    OPENAI_API_KEY="your-actual-api-key-here"
    ```
 
-4. **Add your documents**
-
-   Place your PDF and TXT files in the `data/` folder:
-
-   ```
-   data/
-   ├── document1.pdf
-   ├── document2.pdf
-   └── notes.txt
-   ```
-
-5. **Create the document index**
-
-   ```bash
-   python ingest.py
-   ```
-
-6. **Launch the application**
+4. **Launch the Application**
 
    ```bash
    streamlit run app.py
    ```
 
-7. **Open your browser**
+5. **Access the Web Interface**
 
-   The app will automatically open at `http://localhost:8501`
+   - The app opens automatically at `http://localhost:8502`
+   - If port 8502 is busy, Streamlit will use the next available port
+
+### First Time Usage
+
+1. **Upload Documents**: Use the web interface to upload 1-10 PDF or Word files
+2. **Process Files**: Click "🚀 Process Documents" to create the search index  
+3. **Start Chatting**: Ask questions about your uploaded documents
+4. **View Sources**: Each answer includes references to source documents
 
 ## 📖 Usage Guide
 
-### Adding Documents
+### 🔄 Dynamic Document Management
 
-1. Place your documents (.pdf or .txt files) in the `data/` folder
-2. Run the ingestion script: `python ingest.py`
-3. The script will process your documents and create a searchable index
+#### **Upload Process**
+1. **Access Upload Interface**: If no documents are loaded, you'll see the upload screen
+2. **Select Files**: Choose 1-10 PDF or Word documents using the file picker
+3. **Validate Files**: The system checks file types and sizes automatically
+4. **Process Documents**: Click the purple "🚀 Process Documents" button
+5. **Index Creation**: Wait for automatic FAISS index generation (with progress indicator)
 
-### Asking Questions
+#### **Document Controls**
+- **Clear Chat**: Remove conversation history while keeping documents
+- **New Upload**: Start fresh with new documents  
+- **Clear All Documents**: Permanently remove all uploaded documents and index
 
-Once the app is running, you can ask natural language questions such as:
+### 💬 Intelligent Question-Answering
 
-**For HR Policy Documents:**
+#### **Sample Questions**
 
+**For Business/HR Documents:**
 - "What is the work from home policy?"
-- "What are the maternity leave benefits?"
+- "What are the maternity leave benefits?"  
 - "How does the referral program work?"
-- "What is the PIP policy process?"
+- "What is the performance improvement process?"
 
-**General Questions:**
-
+**General Analysis:**
 - "What are the main topics discussed in the documents?"
 - "Can you summarize the key findings?"
 - "What does the document say about [specific topic]?"
+- "Find information about specific procedures"
 
-### Understanding Results
+#### **Understanding Responses**
 
-The app provides:
+The AI provides:
+- **Contextual Answer**: Generated from your specific documents only
+- **Source References**: Shows which documents were used with file names
+- **No Hallucination**: If information isn't found, the AI clearly states this
+- **Chat History**: Persistent conversation with timestamps
 
-- **Answer**: AI-generated response based on your documents
-- **Sources**: Which documents were used to generate the answer
-- **Document Details**: Expandable section showing the actual text chunks used
+## ⚙️ Configuration & Customization
 
-## 🔧 Configuration
+### Environment Configuration
 
-### Environment Variables
-
-Create a `.env` file with the following:
+Create a `.env` file in the project root:
 
 ```env
-OPENAI_API_KEY="your-openai-api-key"
+OPENAI_API_KEY="your-openai-api-key-here"
 ```
 
-### Customizing the Search
+### Advanced Configuration Options
 
-You can modify the following parameters in the code:
+#### **Document Processing (backend.py)**
+```python
+# Text splitting configuration
+chunk_size=1000              # Size of text chunks for processing
+chunk_overlap=200            # Overlap between chunks for context continuity
 
-**In `ingest.py`:**
+# Search parameters  
+search_kwargs={"k": 3}       # Number of relevant documents to retrieve
+temperature=0                # AI response randomness (0 = deterministic)
+```
 
-- `chunk_size=1000`: Size of text chunks for processing
-- `chunk_overlap=200`: Overlap between chunks to maintain context
+#### **File Upload Limits (app.py)**
+```python
+# File validation settings
+MAX_FILES = 10               # Maximum files per upload
+SUPPORTED_FORMATS = ['pdf', 'doc', 'docx']
+MAX_FILE_SIZE = "200MB"      # Per file size limit
+```
 
-**In `app.py`:**
+#### **UI Customization**
+The 3-section layout uses custom CSS that can be modified:
+- **Title Section**: 80px fixed height at top
+- **Chat Section**: Flexible scrollable middle area  
+- **Input Section**: 100px fixed height at bottom
 
-- `search_kwargs={"k": 3}`: Number of relevant documents to retrieve
-- `temperature=0`: Controls randomness in AI responses (0 = deterministic)
+## 🏗️ System Architecture
 
-## 🏗️ Architecture
+### 🔄 **RAG Pipeline Architecture**
 
-### Document Processing Pipeline
+```
+User Upload → Document Processing → Vector Storage → Query Processing → AI Response
+```
 
-1. **Document Loading**: PDF and TXT files are loaded from the `data/` directory
-2. **Text Splitting**: Documents are split into chunks for better retrieval
-3. **Embedding Generation**: OpenAI creates vector embeddings for each chunk
-4. **Vector Storage**: FAISS stores embeddings for fast similarity search
+#### **Document Processing Pipeline**
+1. **Upload Validation**: File type, size, and count validation
+2. **Temporary Storage**: Secure temporary file handling during processing
+3. **Document Loading**: PDF/Word documents loaded using specialized loaders
+4. **Text Chunking**: Intelligent text splitting with configurable overlap
+5. **Embedding Generation**: OpenAI creates vector embeddings for semantic search
+6. **FAISS Indexing**: Vector storage with local persistence for fast retrieval
 
-### Query Processing
+#### **Query Processing Flow**
+1. **User Input**: Natural language question through web interface
+2. **Semantic Search**: FAISS similarity search to find relevant document chunks
+3. **Context Assembly**: Retrieved chunks formatted as context for the AI
+4. **AI Generation**: GPT-3.5-turbo generates contextual response
+5. **Response Validation**: Anti-hallucination checks to ensure answer accuracy
+6. **Source Attribution**: Document sources attached to the final response
 
-1. **User Query**: Natural language question input
-2. **Similarity Search**: FAISS finds most relevant document chunks
-3. **Context Assembly**: Relevant chunks are formatted for the AI
-4. **Answer Generation**: OpenAI generates a response with source attribution
+### 🎨 **Frontend Architecture**
 
-## 🐛 Troubleshooting
+#### **3-Section Responsive Layout**
+- **Section 1**: Fixed title header with processing status
+- **Section 2**: Scrollable chat area with conversation history  
+- **Section 3**: Fixed input section always visible at bottom
 
-### Common Issues
+#### **Session Management**
+- **Persistent State**: Chat history, document status, and file information
+- **Dynamic Interface**: Switches between upload and chat modes
+- **Error Handling**: Comprehensive validation and user feedback
 
-**"No document index found" error:**
+## � Troubleshooting
 
-- Make sure you've run `python ingest.py` after adding documents
-- Check that documents exist in the `data/` folder
+### Common Issues & Solutions
 
-**"Authentication Error" from OpenAI:**
+#### **🔑 API Key Issues**
+```
+Error: "Authentication Error" from OpenAI
+```
+**Solutions:**
+- Verify `.env` file contains correct OpenAI API key
+- Check API key format: `OPENAI_API_KEY="sk-..."`
+- Ensure sufficient credits in your OpenAI account
+- Restart the application after updating `.env`
 
-- Verify your API key is correct in the `.env` file
-- Ensure you have sufficient credits in your OpenAI account
+#### **📁 Document Processing Issues**
+```  
+Error: "Processing failed" or "File validation error"
+```
+**Solutions:**
+- Ensure files are PDF or Word (.doc/.docx) format only
+- Check file sizes are reasonable (under 50MB per file)
+- Upload 1-10 files maximum per session
+- Try processing fewer files if encountering memory issues
 
-**Import errors:**
+#### **🌐 Connection Issues**
+```
+Error: Port already in use
+```
+**Solutions:**
+- Kill existing Streamlit processes: `taskkill /f /im streamlit.exe`
+- Use different port: `streamlit run app.py --server.port 8503`
+- Check if another application is using the port
 
-- Run `pip install -r requirements.txt` to install all dependencies
-- Ensure you're using Python 3.13+
+#### **📦 Installation Issues**
+```
+Error: Module not found or import errors
+```
+**Solutions:**
+- Install dependencies: `pip install -r requirements.txt`
+- Upgrade pip: `python -m pip install --upgrade pip`
+- Use virtual environment to avoid conflicts
+- Ensure Python 3.13+ is being used
 
-**Port already in use:**
+### 🚀 Performance Optimization
 
-- If port 8501 is busy, run: `streamlit run app.py --server.port 8502`
-
-### Performance Tips
-
-- **Large Documents**: For very large documents, consider increasing `chunk_size` to 1500-2000
-- **Many Documents**: The initial indexing may take time but subsequent queries are fast
-- **Memory Usage**: FAISS indices are loaded into memory for faster searches
+- **Large Documents**: Increase `chunk_size` to 1500-2000 for better context
+- **Many Files**: Initial processing takes time, but queries are fast afterward  
+- **Memory Management**: FAISS indices load into memory for optimal search speed
+- **Browser Performance**: Clear browser cache if UI becomes sluggish
 
 ## 🔒 Security & Privacy
 
@@ -218,42 +305,99 @@ You can modify the following parameters in the code:
 - **API Security**: Only text chunks are sent to OpenAI, never full documents
 - **Environment Protection**: `.gitignore` prevents accidental API key commits
 
+## 🔒 Security & Privacy
+
+### **Data Protection**
+- **Local Processing**: All documents processed and stored locally on your machine
+- **API Security**: Only relevant text chunks sent to OpenAI, never full documents
+- **No Data Persistence**: OpenAI doesn't store your data when using the API
+- **Session Isolation**: Each browser session maintains separate document context
+
+### **Best Practices**
+- Keep your OpenAI API key secure and never commit it to version control
+- Regularly clear uploaded documents if processing sensitive information
+- Monitor your OpenAI API usage and costs through their dashboard
+
+## 🛣️ Roadmap & Future Enhancements
+
+### **Planned Features**
+- [ ] Support for additional file formats (Excel, PowerPoint, etc.)
+- [ ] Advanced search filters and query refinement
+- [ ] Document summarization and key insights extraction
+- [ ] Multi-language document support
+- [ ] Integration with cloud storage services
+- [ ] Advanced analytics and usage metrics
+
+### **Recent Improvements**
+- ✅ Dynamic file upload system (replaced static folder approach)
+- ✅ Anti-hallucination validation system
+- ✅ 3-section responsive UI layout  
+- ✅ Word document support (.doc/.docx)
+- ✅ Real-time processing with progress indicators
+- ✅ Session management and chat history
+
 ## 🤝 Contributing
 
-Feel free to contribute to this project by:
+We welcome contributions! Here's how you can help:
 
-1. Adding support for more file formats (Word, Excel, etc.)
-2. Implementing advanced search filters
-3. Adding document summarization features
-4. Improving the UI/UX
+### **Ways to Contribute**
+1. **Bug Reports**: Submit issues with detailed reproduction steps
+2. **Feature Requests**: Suggest new functionality or improvements  
+3. **Code Contributions**: Fork, develop, and submit pull requests
+4. **Documentation**: Improve README, add examples, or create tutorials
+5. **Testing**: Test with different document types and provide feedback
 
-## 📝 License
+### **Development Setup**
+```bash
+git clone https://github.com/Siddesh-IX/Smart-Document-Search-Agent.git
+cd Smart-Document-Search-Agent
+pip install -r requirements.txt
+# Make your changes
+# Test thoroughly
+# Submit pull request
+```
 
-This project is open source and available under the MIT License.
+## � License
 
-## 🆘 Support
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
-If you encounter any issues:
+## 🆘 Support & Community
 
-1. Check the troubleshooting section above
-2. Verify all dependencies are installed correctly
-3. Ensure your OpenAI API key is valid and has sufficient credits
-4. Check the terminal output for detailed error messages
+### **Getting Help**
+1. **📖 Documentation**: Check this README and inline code comments
+2. **🐛 Issues**: Search existing GitHub issues or create a new one
+3. **💬 Discussions**: Use GitHub Discussions for questions and ideas
+4. **🔍 Troubleshooting**: Follow the comprehensive troubleshooting guide above
 
-## 📊 Example Documents Included
+### **Quick Support Checklist**
+- ✅ Check troubleshooting section
+- ✅ Verify Python 3.13+ and all dependencies installed  
+- ✅ Ensure OpenAI API key is valid with sufficient credits
+- ✅ Review terminal output for detailed error messages
+- ✅ Try with different documents to isolate issues
 
-This setup includes several HR policy documents for testing:
+## 🎯 Project Stats
 
-- Assets Usage and Care Policy
-- Compensatory Off Policy
-- Learning and Development Policy
-- Maternity Leave Policy
-- PIP (Performance Improvement Plan) Policy
-- Referral Policy
-- Work From Home Policy
-
-Try asking questions about these policies to test the system!
+- **Language**: Python 3.13+
+- **Framework**: Streamlit + LangChain  
+- **AI Model**: OpenAI GPT-3.5-turbo
+- **Vector Store**: FAISS with local persistence
+- **File Support**: PDF, Word (.doc/.docx)  
+- **UI**: 3-section responsive layout with custom CSS
+- **Architecture**: RAG (Retrieval-Augmented Generation)
 
 ---
 
-**Built with ❤️ using Streamlit, LangChain, and OpenAI**
+## ⭐ Acknowledgments
+
+- **Streamlit** for the amazing web app framework
+- **LangChain** for the comprehensive RAG pipeline tools
+- **OpenAI** for powerful language models and embeddings
+- **FAISS** for efficient vector similarity search
+- **Python Community** for excellent document processing libraries
+
+---
+
+**🚀 Built with ❤️ using Streamlit, LangChain, and OpenAI**
+
+*Transform your documents into intelligent, searchable knowledge with the power of AI!*
